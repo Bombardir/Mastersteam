@@ -149,61 +149,7 @@ func newServerQuerier() {
 
 	bp := batch.NewBatchProcessor(func(item interface{}) {
 		addr := item.(*net.TCPAddr)
-		query, err := valve.NewServerQuerier(addr.String(), flagTimeout)
-		if err != nil {
-			addError(addr.String(), err)
-			return
-		}
-		defer query.Close()
-
-		info, err := query.QueryInfo()
-		if err != nil {
-			addError(addr.String(), err)
-			return
-		}
-
-		log.Printf("%s - %s\n", addr.String(), info.Name)
-
-		out := &ServerObject{
-			Address:    addr.String(),
-			Protocol:   info.Protocol,
-			Name:       info.Name,
-			MapName:    info.MapName,
-			Folder:     info.Folder,
-			Game:       info.Game,
-			Players:    info.Players,
-			MaxPlayers: info.MaxPlayers,
-			Bots:       info.Bots,
-			Type:       info.Type.String(),
-			Os:         info.OS.String(),
-		}
-		if info.Vac == 1 {
-			out.Vac = true
-		}
-		if info.Visibility == 0 {
-			out.Visibility = "public"
-		} else {
-			out.Visibility = "private"
-		}
-		if info.Ext != nil {
-			out.AppID = info.Ext.AppId
-			out.GameVersion = info.Ext.GameVersion
-			out.Port = info.Ext.Port
-			out.SteamID = fmt.Sprintf("%d", info.Ext.SteamId)
-			out.GameMode = info.Ext.GameModeDescription
-			out.GameID = fmt.Sprintf("%d", info.Ext.GameId)
-		}
-
-		if info.Players > 0 {
-			players, err := query.QueryPlayers()
-			if err != nil {
-				out.PlayersOnline = nil
-			} else {
-				out.PlayersOnline = players
-			}
-		}
-
-		addJSON(addr.String(), out)
+		addJSON(addr.String(), "test")
 	}, flagJ)
 
 	defer bp.Terminate()
