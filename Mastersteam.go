@@ -141,7 +141,6 @@ func newMasterServerQuerier() {
 }
 
 func newServerQuerier() {
-	flagTimeout := time.Second * 3
 	flagJ := 20
 	sNumServers = 0
 
